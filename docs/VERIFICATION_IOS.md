@@ -15,6 +15,19 @@ Windowsの作業環境にはSwift、Xcode、iOS SDKがありません。iOSビ�
 
 Windowsで実行した確認：元のBlender suite **61件成功**（`python -X utf8 -m pytest -q`）、IPA包装 **5件成功**。元のテストのソース読み込みがWindows標準のcp932では失敗したため、UTF-8モードを使用しました。元のBlenderコードは変更していません。
 
+### 2026-10-06 実行結果
+
+[macOS CI #1](https://github.com/yurashu2-droid/Mouse3DPhone/actions/runs/37454325969) は成功しました。ビルド対象コミット：`61fb0623d2560086218b5fc4e39237a1da74e793`。
+
+- Xcode **16.4**、iPhoneOS SDK **18.5**、iOS下限 **16.0**、arm64 Release、コード署名なし。
+- Swift XCTest **7件成功**。Swift生成 **13パケット** と実際のBlenderパーサー／セッションゲートの互換検証成功。
+- IPA包装 **5件成功**、plist／プロジェクト検査成功、Xcode **BUILD SUCCEEDED**。
+- `SpatialPointer-unsigned.ipa`：**155904 bytes**、アプリバージョン **0.2.0**。
+- SHA-256：`475efc1280666959084bcdab88f0e89a7a7822fe03944bf5f81b6b48ddb3f003`。
+- Windowsへ成果物をダウンロードし、SHA-256、Payload構造、arm64実行ファイル、署名なし、Info.plistを確認しました。
+
+機能全体の独立レビューを1回実施し、Swiftの小数リテラルとarm64シミュレーターを識別するIPA検査を修正してからCIを実行しました。以下の実機確認は未実施です。
+
 ## 実機で確認すること（未実施）
 
 1. 署名してiPhoneへ入れ、カメラ／ローカルネットワークの許可を確認する。

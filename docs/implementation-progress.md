@@ -12,4 +12,7 @@ Plan: docs/superpowers/plans/2026-10-06-ios-sender.md
 - Review: corrected seven Swift numeric literals requiring a leading zero. Verify through actual Xcode build in CI.
 - Feature review: one independent review identified the numeric literals and arm64 simulator platform check; both addressed. Remaining hardware checks recorded in VERIFICATION_IOS.md.
 - Local metadata: Info.plist, privacy manifest, asset JSON, scheme XML and all seven app Swift source references verified. Python tools compile; git diff check clean.
-- Task 3: implementation complete, awaiting macOS CI build/artifact.
+- Task 1: complete — macOS Swift XCTest 7/7; actual Swift fixture -> Blender parser/gate 13 packets PASS.
+- Task 2: complete — Xcode 16.4 iPhoneOS 18.5 SDK arm64 iOS16 Release BUILD SUCCEEDED. Hardware checklist remains explicitly unverified.
+- Task 3: complete — unsigned IPA uploaded in CI run 37454325969, downloaded to dist/, SHA-256 verified. 155904 bytes, app version 0.2.0.
+- Original install ZIP was excluded by the source kit's nested `*.zip` ignore; explicitly track the install archive so the README download works.

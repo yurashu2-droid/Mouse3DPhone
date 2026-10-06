@@ -26,23 +26,23 @@
 ### Task 1: Wire protocol and control state
 **Files:** `iOS/SpatialPointerCore/{Package.swift,Sources/*,Tests/*}`, `tools/check_wire.py`, `blender/`.
 **Interfaces:** `PhonePose`, `ConnectionSettings`, `SenderState.nextPacket(token:) -> PosePacket`, `PosePacket.encoded() -> Data`.
-- [ ] Write Swift tests for wire types/order, finite pose validation, sequence reset, tracking recovery and clutch preserving grab.
-- [ ] Implement packet/settings/state package and executable fixture producer.
-- [ ] Run `swift test --package-path iOS/SpatialPointerCore` on macOS; parse Swift-generated packets with Blender `parse_packet` and `SessionGate`.
+- [x] Write Swift tests for wire types/order, finite pose validation, sequence reset, tracking recovery and clutch preserving grab.
+- [x] Implement packet/settings/state package and executable fixture producer.
+- [x] Run `swift test --package-path iOS/SpatialPointerCore` on macOS; parse Swift-generated packets with Blender `parse_packet` and `SessionGate`.
 
 ### Task 2: iPhone application
 **Files:** `iOS/SpatialPointer/{App.swift,Controller.swift,UDPTransport.swift,ContentView.swift,HoldControl.swift,Info.plist,PrivacyInfo.xcprivacy,Assets.xcassets/*}`.
 **Interfaces:** Task 1 models; `UDPTransport.start`, `send`, `stop`; published `PhoneController` UI state.
-- [ ] Add ARKit pose sampling, frame watchdog, camera permissions and lifecycle stop.
-- [ ] Add IPv4 UDP transport with at most four in-flight sends and best-effort release on stop.
-- [ ] Add Japanese settings, camera/status, follow/reset and hold-to-grab UI.
-- [ ] Add Xcode project/shared scheme with the exact package source files.
+- [x] Add ARKit pose sampling, frame watchdog, camera permissions and lifecycle stop.
+- [x] Add IPv4 UDP transport with at most four in-flight sends and best-effort release on stop.
+- [x] Add Japanese settings, camera/status, follow/reset and hold-to-grab UI.
+- [x] Add Xcode project/shared scheme with the exact package source files.
 
 ### Task 3: Build and delivery
 **Files:** `tools/build_unsigned.sh`, `tools/package_ipa.py`, `.github/workflows/ios-unsigned.yml`, `README.md`, `docs/VERIFICATION_IOS.md`.
 **Interfaces:** macOS Xcode builds `SpatialPointer.app`; packager validates arm64 executable and creates `dist/SpatialPointer-unsigned.ipa` plus digest.
-- [ ] Test packager with a realistic temporary app and malformed/wrong-architecture cases.
-- [ ] Validate local project/plists/scheme and the original Blender suite once.
-- [ ] Perform one feature-level review, resolve material findings.
-- [ ] Commit and push one meaningful implementation to the supplied empty repository; inspect macOS CI, fix build failures and retrieve artifact if access allows.
-- [ ] Document actual results separately from tests requiring iPhone/Blender hardware.
+- [x] Test packager with a realistic temporary app and malformed/wrong-architecture cases.
+- [x] Validate local project/plists/scheme and the original Blender suite once.
+- [x] Perform one feature-level review, resolve material findings.
+- [x] Commit and push one meaningful implementation to the supplied empty repository; inspect macOS CI, fix build failures and retrieve artifact if access allows.
+- [x] Document actual results separately from tests requiring iPhone/Blender hardware.
