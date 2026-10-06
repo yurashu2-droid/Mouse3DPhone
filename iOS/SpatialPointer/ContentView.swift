@@ -200,8 +200,13 @@ struct ContentView: View {
                     }
                 }
                 Section("接続の準備") {
-                    Text("1. PCとiPhoneを同じWi-Fiに接続します。\n2. BlenderのSpatialタブでAllow LAN devicesをONにします。\n3. Start UDP Receiverを押し、PCのIPv4・ポート・トークンをここに入力します。")
-                    Text("PCのファイアウォールはプライベートネットワークの受信を許可してください。トークンはアプリを終了すると消えます。")
+                    Text("1. PCとiPhoneを同じWi-Fi、またはUSBテザリングで接続します。\n2. BlenderのSpatialタブでAllow LAN devicesをONにします。\n3. Start UDP Receiverを押し、接続に使うPCのIPv4・ポート・トークンをここに入力します。")
+                    Text("PCのファイアウォールで、BlenderのUDPポートへの受信を使用中のネットワークで許可してください。トークンはアプリを終了すると消えます。")
+                        .font(.footnote).foregroundStyle(.secondary)
+                }
+                Section("USBテザリングの準備") {
+                    Text("iPhoneの設定で「インターネット共有 → ほかの人の接続を許可」をONにし、USBでPCに接続して「信頼」を選びます。WindowsにはAppleデバイスまたはiTunesが必要です。")
+                    Text("PCのUSBテザリング用アダプターのIPv4を入力してください。Wi-Fi接続時とは送信先IPが変わります。ケーブルをつなぐだけでは通信できません。")
                         .font(.footnote).foregroundStyle(.secondary)
                 }
                 if let message = controller.message {

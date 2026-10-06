@@ -78,7 +78,7 @@ final class PhoneController: NSObject, ObservableObject, ARSessionDelegate {
         notBefore = CACurrentMediaTime() + 0.85
         isStarting = false
         isRunning = true
-        networkStatus = "Wi-Fi接続を準備中"
+        networkStatus = "ネットワーク接続を準備中"
         sentCount = 0
         UIApplication.shared.isIdleTimerDisabled = true
         let transport = UDPTransport()
@@ -91,7 +91,7 @@ final class PhoneController: NSObject, ObservableObject, ARSessionDelegate {
                 self.notBefore = CACurrentMediaTime() + 0.85
                 self.state.update(pose: self.state.pose, tracked: false)
             case .waiting:
-                self.networkStatus = "Wi-Fi／ローカルネットワーク許可を確認"
+                self.networkStatus = "接続先／ローカルネットワーク許可を確認"
                 self.state.update(pose: self.state.pose, tracked: false)
             case .failed(let error):
                 self.stop(message: "通信エラー：\(error)")

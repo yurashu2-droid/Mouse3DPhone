@@ -12,7 +12,7 @@
     <key>CFBundleVersion</key><string>$(CURRENT_PROJECT_VERSION)</string>
     <key>LSRequiresIPhoneOS</key><true/>
     <key>NSCameraUsageDescription</key><string>スマホの位置と向きを計測し、Blenderの3Dポインタを操作するためにカメラを使用します。画像は送信・保存しません。</string>
-    <key>NSLocalNetworkUsageDescription</key><string>同じWi-Fi上のPCに位置・回転と操作ボタンのデータを送り、Blenderを操作します。</string>
+    <key>NSLocalNetworkUsageDescription</key><string>Wi-FiまたはUSBテザリングで接続したPCに位置・回転と操作ボタンのデータを送り、Blenderを操作します。</string>
     <key>UIApplicationSceneManifest</key><dict><key>UIApplicationSupportsMultipleScenes</key><false/></dict>
     <key>UILaunchScreen</key><dict/>
     <key>UIRequiredDeviceCapabilities</key><array><string>arm64</string><string>arkit</string></array>

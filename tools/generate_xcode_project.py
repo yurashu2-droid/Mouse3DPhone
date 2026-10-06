@@ -52,9 +52,9 @@ def generate():
                             'SWIFT_VERSION': '5.0', 'ENABLE_USER_SCRIPT_SANDBOXING': 'YES',
                             'DEBUG_INFORMATION_FORMAT': 'dwarf' if mode == 'Debug' else 'dwarf-with-dsym'}
         target_settings = {'ASSETCATALOG_COMPILER_APPICON_NAME': 'AppIcon',
-                           'CODE_SIGN_STYLE': 'Automatic', 'CURRENT_PROJECT_VERSION': '1',
+                           'CODE_SIGN_STYLE': 'Automatic', 'CURRENT_PROJECT_VERSION': '2',
                            'GENERATE_INFOPLIST_FILE': 'NO', 'INFOPLIST_FILE': 'SpatialPointer/Info.plist',
-                           'MARKETING_VERSION': '0.2.0', 'PRODUCT_BUNDLE_IDENTIFIER': 'dev.yurashu2.spatialpointer',
+                           'MARKETING_VERSION': '0.2.1', 'PRODUCT_BUNDLE_IDENTIFIER': 'dev.yurashu2.spatialpointer',
                            'PRODUCT_NAME': '$(TARGET_NAME)', 'TARGETED_DEVICE_FAMILY': '1',
                            'SUPPORTED_PLATFORMS': 'iphoneos iphonesimulator',
                            'SUPPORTS_MACCATALYST': 'NO', 'SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD': 'NO',

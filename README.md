@@ -24,9 +24,21 @@ Actionsの成果物ダウンロードにはGitHubへのログインが必要で�
 3. **Open Practice Scene** を開き、動かしたい物体を通常のマウスで選択します。
 4. **Allow LAN devices** をONにします。Blenderの **Allow Online Access** もONにします。
 5. **Start UDP Receiver** を押し、ポートと生成された **Pairing Token** を確認します。
-6. PCとiPhoneを同じ信頼できるWi-Fi／LANに接続します。PCのファイアウォールではプライベートネットワークのUDP受信を許可します。
+6. PCとiPhoneを同じ信頼できるWi-Fi／LAN、またはUSBテザリングで接続します。PCのファイアウォールでは、BlenderのUDPポート（初期値5005）への受信を使用中のネットワークで許可します。
 
 Windowsでは `ipconfig` の、使用中のWi-FiまたはEthernetアダプターの **IPv4アドレス** を確認します。`127.0.0.1` はiPhoneからPCを指すアドレスではありません。
+
+### USBテザリングで接続する（0.2.1以降）
+
+社寮などの共用Wi-Fiで端末間通信が禁止されている場合は、USBテザリングの経路で試せます。
+
+1. Windowsに **Appleデバイス** または **iTunes** をインストールします。
+2. iPhoneの **設定 → インターネット共有 → ほかの人の接続を許可** をONにします。
+3. iPhoneをデータ通信対応のUSBケーブルでPCに接続し、表示されたら **信頼** を選びます。
+4. PCの `ipconfig` で、USBテザリング用アダプターのIPv4を確認してアプリの送信先に入力します。Wi-Fi接続時のPCのIPとは異なります。
+5. BlenderのAllow LAN devices、UDPポート、トークンは同じように設定し、アプリで送信を開始します。
+
+[AppleのUSBテザリング手順](https://support.apple.com/ja-jp/111785)。アプリはiOSが選ぶ送信先への経路を使用します。ケーブルを挿すだけでデータを転送する方式ではありません。USB経由の実機動作は未検証なので、BlenderのAccepted件数と実際の動きを確認してください。
 
 ## iPhoneで操作する
 

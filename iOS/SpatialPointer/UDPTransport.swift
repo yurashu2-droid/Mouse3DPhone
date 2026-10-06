@@ -15,7 +15,7 @@ final class UDPTransport {
 
     func start(_ settings: ConnectionSettings) {
         let parameters = NWParameters.udp
-        parameters.requiredInterfaceType = .wifi
+        // Let iOS choose the route to the PC, including USB Personal Hotspot.
         let connection = NWConnection(host: NWEndpoint.Host(settings.host),
                                       port: NWEndpoint.Port(rawValue: settings.port)!,
                                       using: parameters)
