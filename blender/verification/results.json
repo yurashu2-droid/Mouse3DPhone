@@ -1,0 +1,22 @@
+{
+  "project": "Spatial Pointer",
+  "version": "0.1.0",
+  "date": "2026-10-06",
+  "python": "3.13.5",
+  "platform": "Linux-6.18.44-x86_64-with-glibc2.41",
+  "pytest": {
+    "passed": 60,
+    "failed": 0
+  },
+  "python_compilation": "PASS",
+  "python_3_11_grammar": "PASS",
+  "udp_loopback": "PASS",
+  "subprocess_udp_sender": "PASS",
+  "zip_structure": "PASS",
+  "blender_runtime": "NOT_RUN: binary unavailable in creation environment",
+  "official_blender_extension_validator": "NOT_RUN",
+  "blender_smoke_test": "Provided, NOT_RUN",
+  "blender_ui_and_keyboard": "NOT_RUN",
+  "iphone_tracking_app": "NOT_INCLUDED",
+  "independent_code_review": "NOT_PERFORMED: no reviewer tool available"
+}

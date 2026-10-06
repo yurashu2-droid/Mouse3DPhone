@@ -1,0 +1,15 @@
+schema_version = "1.0.0"
+id = "spatial_pointer"
+version = "0.1.1"
+name = "Spatial Pointer"
+tagline = "Control a true 3D pointer with keyboard or external 6DoF poses"
+maintainer = "Spatial Pointer Prototype"
+type = "add-on"
+blender_version_min = "4.2.0"
+license = ["SPDX:GPL-3.0-or-later"]
+
+[permissions]
+network = "Receive pose data from a local PC simulator or a paired LAN device"
+
+[build]
+paths_exclude_pattern = ["__pycache__/", "*.pyc", ".*", "*.zip"]

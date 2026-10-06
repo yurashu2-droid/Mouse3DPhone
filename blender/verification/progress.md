@@ -1,0 +1,12 @@
+# Execution ledger — plan: docs/superpowers/plans/2026-10-06-spatial-pointer.md
+- Isolated new artifact workspace; no existing user repository is edited.
+- Ruling: Implement the already-requested prototype in this response rather than re-asking design approval; scope follows the preceding proposed v0.1.
+- Pre-flight: Keyboard and UDP must both feed PoseMapper; quaternion order wxyz everywhere. The pure core must not import bpy.
+- Blender binary not preinstalled. Official binary fetch attempts unsuccessful; actual runtime verification remains conditional.
+- Task 1 complete: 46 initial tests passed; protocol and transport use no bpy.
+- Task 2 source completed: Blender modules compiled; 3 static contract checks passed. Native Blender smoke test authored but UNRUN because no Blender runtime was available. No claim of a successful Blender launch.
+- Self-review: fixed malformed-surrogate token handling after reproducing UnicodeEncodeError; regression now passes.
+- Self-review: honor W rotation locks only in applicable 4D modes; native regression added (unrun).
+- Self-review: clear grab history across scenes and refuse grabbing with stopped input; native regressions added (unrun).
+- Task 3 tests: actual subprocess sender to real loopback socket, neutral final packet, manifest/root ZIP checks. Full suite currently 60 passed.
+- Independent review: no separate reviewer/subagent was available. Source/lifecycle review was performed inline; not an independent review.
