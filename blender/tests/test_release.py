@@ -24,7 +24,8 @@ def test_install_zip_layout_and_contents(tmp_path):
     with zipfile.ZipFile(path) as z:
         names = z.namelist()
         for required in ('__init__.py', 'blender_manifest.toml', 'addon.py',
-                         'runtime.py', 'visuals.py', 'core.py', 'transport.py', 'README_JA.md', 'LICENSE'):
+                         'runtime.py', 'visuals.py', 'core.py', 'transport.py', 'preview.py',
+                         'preview_transport.py', 'README_JA.md', 'LICENSE'):
             assert required in names
         assert not any('__pycache__' in n or '.git' in n or n.endswith('.pyc') for n in names)
         assert not any(n.startswith('/') or '..' in Path(n).parts for n in names)

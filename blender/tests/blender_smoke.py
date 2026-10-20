@@ -20,9 +20,23 @@ def run():
     from spatial_pointer import visuals
     from spatial_pointer.core import Pose, qaxis
     from spatial_pointer.runtime import RUNTIME
+    from spatial_pointer.preview import pointer_view_matrix
 
     spatial_pointer.register()
     assert hasattr(bpy.types.Scene, 'spatial_pointer_settings')
+    assert not bpy.context.scene.spatial_pointer_settings.phone_pointer_view
+    assert bpy.context.scene.spatial_pointer_settings.preview_port == 5006
+    camera_world = pointer_view_matrix(Pose()).inverted()
+    assert (camera_world.to_3x3() @ Vector((0, 0, -1)) - Vector((0, 1, 0))).length < 1e-5
+    assert (camera_world.to_3x3() @ Vector((0, 1, 0)) - Vector((0, 0, 1))).length < 1e-5
+    settings = bpy.context.scene.spatial_pointer_settings
+    settings.phone_pointer_view = True
+    settings.allow_lan = False
+    RUNTIME.start(bpy.context.scene, 'KEYBOARD')
+    assert RUNTIME.running and not RUNTIME.preview.running, 'Preview requires explicit LAN opt-in'
+    assert 'Allow LAN devices' in RUNTIME.preview.message
+    RUNTIME.stop()
+    settings.phone_pointer_view = False
     original_scene = bpy.context.scene
     original_objects = set(original_scene.objects)
     visuals.ensure_pointer(original_scene, Pose((0, 0, 1)), .12)
@@ -54,6 +68,7 @@ def run():
     assert RUNTIME.restore_last()
     assert (obj.matrix_world.translation - saved.translation).length < 1e-5
     RUNTIME.stop()
+    assert not RUNTIME.preview.running and RUNTIME.preview.offscreen is None
     assert not RUNTIME.grab(obj), 'Stopped input must not grab through a direct operator call'
 
     old_scenes = set(bpy.data.scenes)

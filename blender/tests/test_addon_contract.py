@@ -5,7 +5,7 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 def test_blender_modules_exist_and_compile():
-    for name in ['__init__.py', 'addon.py', 'runtime.py', 'visuals.py']:
+    for name in ['__init__.py', 'addon.py', 'runtime.py', 'visuals.py', 'preview.py', 'preview_transport.py']:
         path = ROOT / 'spatial_pointer' / name
         assert path.is_file(), f'Missing Blender module: {name}'
         compile(path.read_text(), str(path), 'exec')
@@ -14,6 +14,13 @@ def test_blender_modules_exist_and_compile():
 def test_bpy_modules_do_not_spawn_background_threads():
     for path in (ROOT / 'spatial_pointer').glob('*.py'):
         tree = ast.parse(path.read_text())
+        imports = {a.name.split('.')[0] for node in ast.walk(tree)
+                   if isinstance(node, ast.Import) for a in node.names}
+        imports.update(node.module.split('.')[0] for node in ast.walk(tree)
+                       if isinstance(node, ast.ImportFrom) and node.module)
+        if path.stem == 'preview_transport':
+            assert not imports.intersection({'bpy', 'gpu', 'mathutils'})
+            continue
         for node in ast.walk(tree):
             if isinstance(node, ast.Import):
                 assert all(a.name not in {'threading', 'subprocess'} for a in node.names)
