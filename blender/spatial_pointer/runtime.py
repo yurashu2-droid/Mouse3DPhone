@@ -9,6 +9,7 @@ import bpy
 from mathutils import Vector
 from .core import Pose, PoseMapper, SessionGate, advance_keyboard, smooth_pose
 from .transport import UDPReceiver
+from .preview import PointerPreview
 from . import visuals
 
 
@@ -36,6 +37,7 @@ class Runtime:
         self.dropped = 0
         self.status = 'Stopped'
         self.notice = ''
+        self.preview = PointerPreview(self)
 
     @property
     def running(self):
@@ -94,12 +96,14 @@ class Runtime:
         if source == 'UDP' and not bpy.app.timers.is_registered(timer_tick):
             bpy.app.timers.register(timer_tick, first_interval=.01)
         self.apply_pose()
+        self.preview.sync()
         visuals.tag_redraw()
 
     def stop(self, cancel_grab=False, message='Stopped', unregister_timer=True):
         try:
             self.release(cancel=cancel_grab)
         finally:
+            self.preview.stop()
             if self.receiver is not None:
                 self.receiver.close()
                 self.receiver = None
@@ -272,6 +276,7 @@ class Runtime:
             self.stop(message='Stopped: use Object Mode', unregister_timer=False)
             return
         settings = self.scene.spatial_pointer_settings
+        self.preview.sync()
         if self.source == 'KEYBOARD':
             self.input_pose = advance_keyboard(self.input_pose, self.keys, dt,
                 settings.move_speed, math.radians(settings.rotation_speed), self.precision)

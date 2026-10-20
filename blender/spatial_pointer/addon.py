@@ -34,7 +34,10 @@ class SPATIALPOINTER_Settings(bpy.types.PropertyGroup):
         description='Listen on all IPv4 interfaces instead of localhost; use only a trusted private network')
     pair_token: StringProperty(name='Pairing token', default='', maxlen=64,
         description='Required in LAN packets; plain text pairing, not encryption')
-    show_network: BoolProperty(name='UDP / future phone input', default=False)
+    phone_pointer_view: BoolProperty(name='Phone pointer view', default=False,
+        description='Share a first-person view from the pointer with the paired phone; needs LAN and Online Access')
+    preview_port: IntProperty(name='Preview HTTP port', default=5006, min=1024, max=65535)
+    show_network: BoolProperty(name='Phone / UDP input', default=False)
     show_tuning: BoolProperty(name='Tuning', default=False)
     show_help: BoolProperty(name='Keys & limits', default=True)
 
@@ -315,7 +318,7 @@ class SPATIALPOINTER_OT_remove(bpy.types.Operator):
 
 
 class SPATIALPOINTER_PT_main(bpy.types.Panel):
-    bl_label = 'Spatial Pointer · 0.1'
+    bl_label = 'Spatial Pointer · 0.2'
     bl_idname = 'VIEW3D_PT_spatial_pointer'
     bl_space_type = 'VIEW_3D'
     bl_region_type = 'UI'
@@ -398,7 +401,13 @@ class SPATIALPOINTER_PT_main(bpy.types.Panel):
             else:
                 box.operator('spatial_pointer.stop', icon='PAUSE')
                 box.label(text=f'Accepted {RUNTIME.packets}  |  Dropped {RUNTIME.dropped}')
-            box.label(text='iPhone tracking app not included', icon='INFO')
+            box.prop(s, 'phone_pointer_view')
+            if s.phone_pointer_view:
+                port_row = box.row()
+                port_row.enabled = not RUNTIME.running
+                port_row.prop(s, 'preview_port')
+                box.label(text=RUNTIME.preview.message if same_scene else 'Start input to enable pointer view')
+                box.label(text='Keep a 3D View open · up to 5 fps', icon='INFO')
         box = layout.box()
         box.prop(s, 'show_help', icon='TRIA_DOWN' if s.show_help else 'TRIA_RIGHT', emboss=False)
         if s.show_help:

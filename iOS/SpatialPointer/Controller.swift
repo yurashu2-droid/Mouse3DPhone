@@ -14,6 +14,8 @@ final class PhoneController: NSObject, ObservableObject, ARSessionDelegate {
     @Published private(set) var canGrab = false
     @Published private(set) var grabbing = false
     @Published private(set) var following = false
+    @Published private(set) var moveHeld = false
+    @Published private(set) var grabHeld = false
     @Published private(set) var tracked = false
     @Published private(set) var networkStatus = "未送信"
     @Published private(set) var trackingStatus = "送信開始後、周囲にカメラを向けてください。"
@@ -21,7 +23,11 @@ final class PhoneController: NSObject, ObservableObject, ARSessionDelegate {
     @Published private(set) var poseText = "X 0.00  Y 0.00  Z 0.00 m"
     @Published var message: String?
     @Published var sendHz = 60
+    let preview = PointerPreview()
     private var state = SenderState()
+    private var motion = MotionControls()
+    private var previewEnabled = false
+    private var previewPort = "5006"
     private var transport: UDPTransport?
     private var settings: ConnectionSettings?
     private var timer: Timer?
@@ -73,6 +79,7 @@ final class PhoneController: NSObject, ObservableObject, ARSessionDelegate {
         guard startOperation == operation else { return }
         self.settings = settings
         state.reset()
+        motion.reset()
         lastFrameTime = -.infinity
         interrupted = false
         notBefore = CACurrentMediaTime() + 0.85
@@ -89,10 +96,10 @@ final class PhoneController: NSObject, ObservableObject, ARSessionDelegate {
             case .ready:
                 self.networkStatus = "UDP送信可能 · 受信未確認"
                 self.notBefore = CACurrentMediaTime() + 0.85
-                self.state.update(pose: self.state.pose, tracked: false)
+                self.loseTracking()
             case .waiting:
                 self.networkStatus = "接続先／ローカルネットワーク許可を確認"
-                self.state.update(pose: self.state.pose, tracked: false)
+                self.loseTracking()
             case .failed(let error):
                 self.stop(message: "通信エラー：\(error)")
             }
@@ -100,6 +107,7 @@ final class PhoneController: NSObject, ObservableObject, ARSessionDelegate {
         }
         transport.start(settings)
         runWorldTracking()
+        if previewEnabled { preview.start(settings: settings, port: previewPort) }
         let timer = Timer(timeInterval: 1.0 / Double(sendHz == 30 ? 30 : 60), repeats: true) { [weak self] _ in
             self?.tick()
         }
@@ -123,6 +131,7 @@ final class PhoneController: NSObject, ObservableObject, ARSessionDelegate {
         state.stop()
         emit(force: true)
         state.reset()
+        motion.reset()
         lastFrameTime = -.infinity
         notBefore = CACurrentMediaTime() + 0.85
         interrupted = false
@@ -130,26 +139,52 @@ final class PhoneController: NSObject, ObservableObject, ARSessionDelegate {
         publish()
     }
 
-    func setFollow(_ value: Bool) {
-        guard isRunning else { return }
-        state.setFollow(value)
+    func setMoveHeld(_ value: Bool) {
+        guard isRunning, !value || canGrab else { return }
+        motion.setMoveHeld(value)
+        applyControls()
         emit()
         publish()
-        UISelectionFeedbackGenerator().selectionChanged()
     }
 
-    func setGrab(_ value: Bool) {
-        if value && !canGrab { return }
-        state.setGrab(value)
+    func setGrabHeld(_ value: Bool) {
+        guard isRunning, !value || canGrab else { return }
+        motion.setGrabHeld(value)
+        applyControls()
         emit()
         publish()
         if value && state.grabbing { UIImpactFeedbackGenerator(style: .light).impactOccurred() }
+    }
+
+    func setSensitivity(translation: Double, rotation: Double) {
+        motion.setSensitivity(translation: translation, rotation: rotation)
+    }
+
+    func configurePreview(enabled: Bool, port: String) {
+        guard previewEnabled != enabled || previewPort != port else { return }
+        previewEnabled = enabled
+        previewPort = port
+        if enabled, isRunning, let settings { preview.start(settings: settings, port: port) }
+        else { preview.stop() }
+    }
+
+    private func applyControls() {
+        state.setFollow(motion.following)
+        state.setGrab(motion.grabbing)
+    }
+
+    private func loseTracking() {
+        motion.release()
+        state.update(pose: motion.pose, tracked: false)
+        applyControls()
     }
 
     func stop(message: String? = nil) {
         startOperation = UUID()
         timer?.invalidate()
         timer = nil
+        preview.stop()
+        motion.release()
         state.stop()
         let final = settings.flatMap { try? state.nextPacket(token: $0.token).encoded() }
         transport?.stop(finalPacket: final)
@@ -169,7 +204,7 @@ final class PhoneController: NSObject, ObservableObject, ARSessionDelegate {
         guard isRunning else { return }
         let now = CACurrentMediaTime()
         if now - lastFrameTime > 0.25 {
-            state.update(pose: state.pose, tracked: false)
+            loseTracking()
             if trackingStatus != "位置情報が途切れました。掴みを解除しています。" {
                 trackingStatus = "位置情報が途切れました。掴みを解除しています。"
             }
@@ -197,6 +232,8 @@ final class PhoneController: NSObject, ObservableObject, ARSessionDelegate {
         if canGrab != readyToGrab { canGrab = readyToGrab }
         if grabbing != state.grabbing { grabbing = state.grabbing }
         if following != state.following { following = state.following }
+        if moveHeld != motion.moveHeld { moveHeld = motion.moveHeld }
+        if grabHeld != motion.grabHeld { grabHeld = motion.grabHeld }
         if tracked != state.tracked { tracked = state.tracked }
     }
 
@@ -208,7 +245,7 @@ final class PhoneController: NSObject, ObservableObject, ARSessionDelegate {
         guard let pose = try? PhonePose(position: [Double(position.x), Double(position.y), Double(position.z)],
                                       rotation: [Double(quaternion.real), Double(quaternion.imag.x),
                                                  Double(quaternion.imag.y), Double(quaternion.imag.z)]) else {
-            state.update(pose: state.pose, tracked: false)
+            loseTracking()
             publish()
             return
         }
@@ -233,7 +270,9 @@ final class PhoneController: NSObject, ObservableObject, ARSessionDelegate {
             }
         }
         let wasTracked = state.tracked
-        state.update(pose: pose, tracked: normal)
+        motion.update(pose: pose, tracked: normal)
+        state.update(pose: motion.pose, tracked: normal)
+        applyControls()
         if trackingStatus != status { trackingStatus = status }
         if wasTracked && !normal { emit(force: true) }
         publish()
@@ -241,7 +280,7 @@ final class PhoneController: NSObject, ObservableObject, ARSessionDelegate {
 
     func sessionWasInterrupted(_ session: ARSession) {
         interrupted = true
-        state.update(pose: state.pose, tracked: false)
+        loseTracking()
         trackingStatus = "計測が中断されました。掴みを解除しています。"
         emit(force: true)
         publish()

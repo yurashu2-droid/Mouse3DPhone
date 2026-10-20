@@ -6,13 +6,13 @@ on:
     paths:
       - 'iOS/**'
       - 'tools/**'
-      - 'blender/spatial_pointer/**'
+      - 'blender/**'
       - '.github/workflows/ios-unsigned.yml'
   pull_request:
     paths:
       - 'iOS/**'
       - 'tools/**'
-      - 'blender/spatial_pointer/**'
+      - 'blender/**'
       - '.github/workflows/ios-unsigned.yml'
   workflow_dispatch:
 
@@ -41,11 +41,19 @@ jobs:
           python3 tools/check_wire.py /tmp/spatial-pointer-fixtures.json
       - name: IPA packaging tests
         run: python3 -m unittest discover -s tools/tests -v
+      - name: Blender preview tests
+        working-directory: blender
+        run: |
+          python3 -m venv "$RUNNER_TEMP/spatial-pointer-tests"
+          "$RUNNER_TEMP/spatial-pointer-tests/bin/python" -m pip install pytest
+          "$RUNNER_TEMP/spatial-pointer-tests/bin/python" -m pytest -q
       - name: Project metadata
         run: |
           plutil -lint iOS/SpatialPointer/Info.plist iOS/SpatialPointer/PrivacyInfo.xcprivacy iOS/SpatialPointer.xcodeproj/project.pbxproj
       - name: Build unsigned arm64 app and package IPA
         run: bash tools/build_unsigned.sh
+      - name: Package Blender extension
+        run: python3 tools/build_blender_zip.py
       - name: Upload unsigned IPA
         uses: actions/upload-artifact@v4
         with:
@@ -53,5 +61,7 @@ jobs:
           path: |
             dist/SpatialPointer-unsigned.ipa
             dist/SpatialPointer-unsigned.ipa.sha256
+            dist/spatial_pointer-*.zip
+            dist/spatial_pointer-*.zip.sha256
           if-no-files-found: error
           retention-days: 30
