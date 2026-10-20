@@ -8,6 +8,7 @@ from __future__ import annotations
 import hmac
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 import json
+import os
 import struct
 import threading
 import time
@@ -79,7 +80,9 @@ class PreviewState:
 class _PreviewHTTPServer(ThreadingHTTPServer):
     daemon_threads = True
     block_on_close = False
-    allow_reuse_address = False
+    # POSIX needs reuse for TIME_WAIT restarts; Windows gives it different,
+    # unsafe concurrent-binding semantics, so keep it disabled there.
+    allow_reuse_address = os.name != 'nt'
 
     def get_request(self):
         client, address = super().get_request()

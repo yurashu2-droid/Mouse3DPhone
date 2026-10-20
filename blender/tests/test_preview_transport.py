@@ -93,8 +93,11 @@ def test_demand_expires_and_shutdown_releases_port_even_with_idle_client():
         server.close()
         assert time.monotonic() - started < 1
         assert not server.thread.is_alive()
-        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
-            sock.bind(address)
+        replacement = PreviewServer(*address, 'pair-token', PreviewState())
+        try:
+            assert request(replacement, '/status', 'Bearer pair-token')[0] == 200
+        finally:
+            replacement.close()
     finally:
         idle_client.close()
         server.close()
