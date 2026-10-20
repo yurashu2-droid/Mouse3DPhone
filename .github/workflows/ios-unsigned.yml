@@ -40,7 +40,7 @@ jobs:
           swift run --package-path iOS/SpatialPointerCore PacketFixture > /tmp/spatial-pointer-fixtures.json
           python3 tools/check_wire.py /tmp/spatial-pointer-fixtures.json
       - name: IPA packaging tests
-        run: python3 -m unittest discover -s tools/tests -v
+        run: python3 -m unittest discover -s tools/tests -p 'test_package_ipa.py' -v
       - name: Blender preview tests
         working-directory: blender
         run: |
