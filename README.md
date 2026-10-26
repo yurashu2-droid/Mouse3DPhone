@@ -4,7 +4,7 @@ AI・開発者向けの再開案内は [引き継ぎ文書](docs/HANDOFF.md) と
 
 ## ゲーム試作：弾を飼う
 
-スマホを弾の器にする二画面ゲームを追加しました。PCで `Start-Bullet-Pet.cmd` を実行し、iPhoneアプリ0.4.0のゲームコントローラーアイコンから接続します。PCだけのデモ操作もあります。[遊び方・起動方法](games/bullet_pet/README.md)。
+スマホを弾の器にする二画面ゲームを追加しました。Godot 3D版は `Start-Bullet-Pet-3D.cmd`、ブラウザー版は `Start-Bullet-Pet.cmd` から起動し、iPhoneアプリ0.4.0のゲームコントローラーアイコンから接続します。PCだけのデモ操作もあります。[遊び方・起動方法](games/bullet_pet/README.md)。
 
 iPhoneの位置・回転でBlenderの3Dポインタを操作する、iOSネイティブアプリです。カメラとモーションセンサーを使うARKitの空間計測を利用します。スマホを傾けるだけの操作ではなく、左右・上下・前後の移動を送信します。
 

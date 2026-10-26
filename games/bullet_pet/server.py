@@ -101,7 +101,7 @@ class Handler(BaseHTTPRequestHandler):
                     return self._reply(200, self.server.game.snapshot(time.monotonic()))
                 return self._events()
             static = {'/': 'desktop.html', '/phone': 'phone.html'}
-            for name in ('desktop.js', 'phone.js', 'shared.js', 'style.css'):
+            for name in ('desktop.js', 'phone.js', 'shared.js', 'pot3d.js', 'style.css'):
                 static['/assets/'+name] = name
             if route not in static:
                 return self._reply(404, {'error': 'Not found'})

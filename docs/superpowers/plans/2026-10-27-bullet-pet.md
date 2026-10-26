@@ -63,3 +63,5 @@ Phone native bridge:
 
 - Initial: isolated manualworktree after native manager reported Not a gitrepository (outer workspace is notgit). Original conceptdocs remain untouched inprimary.
 - Ruling: use state+Canvas instead of video streaming or Unity. Fastest test of two screens; price is a 2D gameplay spike rather than a final3D engineSDK.
+- User steering: asked for a higher-quality Godot3D game after seeing the initial browserprototype. Added nativeGodot4.7.2 PC client (arena.gd,net.gd,main.gd), keepsPython gameauthority andsameiPhone0.4API. Addedperspectivetrai+ballsrenderer tophone. NewStart-Bullet-Pet-3D.cmd usesbundledruntime orinstalledGodot. Browserversionretainedforconnection/diagnostics.
+- Verification: Python12 tests; actualHTTPcapture5balls→merge→bossdamage20→releasepaused, 238updates/8.41sec. NativeiOS0.4.0/build4 CI40351342072 succeeded. ActualGodotVulkanRTX4060 GUI ran, showedstates/3Dprojectiles/PCjoin. Font/layoutcorrectedafterrealrender. iPhonehardware stillunverified.
