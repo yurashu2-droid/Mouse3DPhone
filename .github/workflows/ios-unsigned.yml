@@ -7,12 +7,14 @@ on:
       - 'iOS/**'
       - 'tools/**'
       - 'blender/**'
+      - 'games/bullet_pet/**'
       - '.github/workflows/ios-unsigned.yml'
   pull_request:
     paths:
       - 'iOS/**'
       - 'tools/**'
       - 'blender/**'
+      - 'games/bullet_pet/**'
       - '.github/workflows/ios-unsigned.yml'
   workflow_dispatch:
 
@@ -41,6 +43,12 @@ jobs:
           python3 tools/check_wire.py /tmp/spatial-pointer-fixtures.json
       - name: IPA packaging tests
         run: python3 -m unittest discover -s tools/tests -p 'test_package_ipa.py' -v
+      - name: Bullet Pet rules and transport
+        run: |
+          python3 -m unittest discover -s games/bullet_pet/tests -v
+          node --check games/bullet_pet/web/shared.js
+          node --check games/bullet_pet/web/desktop.js
+          node --check games/bullet_pet/web/phone.js
       - name: Blender preview tests
         working-directory: blender
         run: |
@@ -54,6 +62,8 @@ jobs:
         run: bash tools/build_unsigned.sh
       - name: Package Blender extension
         run: python3 tools/build_blender_zip.py
+      - name: Package PC game prototype
+        run: python3 tools/package_bullet_pet.py
       - name: Upload unsigned IPA
         uses: actions/upload-artifact@v4
         with:
@@ -63,5 +73,7 @@ jobs:
             dist/SpatialPointer-unsigned.ipa.sha256
             dist/spatial_pointer-*.zip
             dist/spatial_pointer-*.zip.sha256
+            dist/BulletPet-PC.zip
+            dist/BulletPet-PC.zip.sha256
           if-no-files-found: error
           retention-days: 30

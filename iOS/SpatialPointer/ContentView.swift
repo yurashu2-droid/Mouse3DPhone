@@ -52,6 +52,7 @@ struct ContentView: View {
     @State private var token = ""
     @State private var showingSettings = false
     @State private var showingHelp = false
+    @State private var showingGame = false
 
     var body: some View {
         NavigationStack {
@@ -81,11 +82,19 @@ struct ContentView: View {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button {
                         controller.stop()
+                        showingGame = true
+                    } label: { Image(systemName: "gamecontroller") }
+                        .accessibilityLabel("弾を飼うゲームを開く")
+                }
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button {
+                        controller.stop()
                         showingSettings = true
                     } label: { Image(systemName: "slider.horizontal.3") }
                         .accessibilityLabel("接続設定")
                 }
             }
+            .fullScreenCover(isPresented: $showingGame) { GameView() }
             .sheet(isPresented: $showingSettings) { settingsView }
             .sheet(isPresented: $showingHelp) { helpView }
             .onChange(of: showingHelp) { visible in if visible { controller.stop() } }
