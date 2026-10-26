@@ -1,5 +1,11 @@
 # iOS検証
 
+## 2026-10-27 / 0.4.0 build4
+
+ゲーム用WKWebView画面、CoreMotion30Hz傾き入力、設定先originへの制限、停止・バックグラウンド解放を追加。[CI40351342072](https://github.com/yurashu2-droid/Mouse3DPhone/actions/runs/40351342072)でSwift14・互換13パケット・IPA包装5・ゲーム12・Blender69とarm64無署名ビルドが成功。WindowsへIPAを保存し、バージョン・署名なし・SHA-256を確認。
+
+その後のGodot 3D PCクライアントとスマホ容器描画はPCサーバーのソース変更のみで、同じIPAから利用できる。PCのGodot実描画と手元ページのCPU3D描画を確認。**iPhone実機の傾き方向、WKWebView内の描画、再較正、バックグラウンド復帰は未検証。**
+
 ## 環境の区別
 
 Windowsの作業環境にはSwift、Xcode、iOS SDKがありません。iOSビルドはGitHub ActionsのmacOS runnerで実行します。コンパイル成功は、iPhone実機の計測やBlenderの操作感を検証したこととは区別します。

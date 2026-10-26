@@ -49,6 +49,7 @@ jobs:
           node --check games/bullet_pet/web/shared.js
           node --check games/bullet_pet/web/desktop.js
           node --check games/bullet_pet/web/phone.js
+          node --check games/bullet_pet/web/pot3d.js
       - name: Blender preview tests
         working-directory: blender
         run: |

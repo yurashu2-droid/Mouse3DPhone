@@ -7,5 +7,6 @@ __pycache__/
 .swiftpm/
 .derived/
 dist/
+.godot/
 *.xcuserstate
 xcuserdata/

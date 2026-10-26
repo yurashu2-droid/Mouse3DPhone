@@ -2,6 +2,21 @@
 
 記録日：2026-10-20（日本時間）。他のAI・別PCでも、このリポジトリをcloneして本書から作業を再開できます。会話履歴やCodex専用機能は必須ではありません。
 
+## 2026-10-27更新：ゲーム試作とGodot 3D版
+
+- ユーザーが二画面ゲームの企画トーナメント後「一旦作って」と依頼。さらに「Godotなどで高品質に。2Dはよくない」と方向修正したため、PC側にGodot 3D版を追加した。
+- 推奨入口 `Start-Bullet-Pet-3D.cmd`。Godotプロジェクト `games/bullet_pet/godot/project.godot`、遊び方 `games/bullet_pet/README.md`。ブラウザー版は `Start-Bullet-Pet.cmd`。
+- ゲーム『弾を飼う』：受け口で敵弾を取り込む8秒→スマホ内で傾けて同色同レベルを合体6秒→敵へ返射6秒。ボスHP100、2分、ライフ5。手元映像の配信ではなく、状態同期＋各画面の描画。
+- iOS **0.4.0/build4**のゲームコントローラーアイコンから接続。CoreMotionの傾き専用でカメラ不要。既存Blender用ARKit操作とは別モードで、開くとBlender送信を停止する。完全な6DoFゲームSDKではない。
+- 新規 `games/bullet_pet/core.py` が進行・衝突を管理、`server.py` がTCP8767でHTTP/SSE30Hz。Godotの `net.gd` が同じ状態を読み、`main.gd` がHUD・PC入力・音、`arena.gd` が立体の敵・受け口・弾・VFXを描画する。
+- スマホは `web/phone.js` と `pot3d.js` の立体容器。WebGL停止環境では、実際の3D座標を遠近投影するCPU描画へ切り替える。内蔵ブラウザーとChromeではWebGLコンテキスト停止が起き、CPU版の表示を確認した。GPU制限を回避する設定変更はしていない。
+- ゲームの6桁コードはサーバー起動ごとに変わり、Blenderのトークンとは別。1クライアントのみ操作権。1.5秒途切れると進行と弾を停止し、明示参加で再開。PCの「サーバー終了」で終了、一時FWルール削除。2時間でも自動停止。
+- 0.4.0成功CI [40351342072](https://github.com/yurashu2-droid/Mouse3DPhone/actions/runs/40351342072)、対象 `3884d9c677ecca2b1e240adaff22ca1a6f60ca6e`。Swift14、互換13パケット、包装5、ゲーム12、Blender69、arm64無署名ビルドが成功。その後のGodot/手元描画の変更はSwiftを変更していないので、このIPAを使用可能。
+- ローカル検証：HTTP実通信で5個捕獲→合体→20ダメージ→明示停止、238入力/8.41秒。Godot4.7.2・RTX4060・Vulkan Forward+の実画面、PC参加、立体弾を確認。headless起動180フレームにエラーなし。**iPhone実機の新版操作・傾き方向・画面復帰は未検証。**
+- 配布物はローカル `dist/v0.4.0/SpatialPointer-unsigned.ipa` と `BulletPet-PC-3D.zip`。後者はGodot実行ファイルとライセンスを同梱、Python3.11以上は必要。バイナリはGit管理外。
+- Godot公式ランタイムはローカル `dist/godot-runtime/Godot_v4.7.2-stable_win64.exe`。ソースcloneだけならGodot4をPATHまたは `runtime/Godot.exe` に用意。自動生成 `.godot/` キャッシュは追跡しない。
+- 旧版Blenderアドオン0.2.0と接続設定を今回変更していない。以下は10/20時点のBlender/iOS初期状態の履歴で、最新ゲーム状態はこの節を優先する。
+
 ## 現在地
 
 - リポジトリ：https://github.com/yurashu2-droid/Mouse3DPhone
